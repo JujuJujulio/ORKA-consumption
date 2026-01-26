@@ -4,24 +4,11 @@ using namespace System.Net
 param($Request, $TriggerMetadata) #idk youtube vid met uitleg over param blokken in azure functions powershell
 
 # Input parameters
-$InputDomain = Request.Body.domain #Line 17 is hardcoded sometimes
-$InputUpn = $Request.Body.upn
-$InputAliasesToAdd = $Request.Body.AliasesAdd | ForEach-Object { $_.Trim() }
-$InputAliasesToRemove = $Request.Body.AliasesRm | ForEach-Object { $_.Trim() }
+$upn = $Request.Body.upn
+$aliasesToAdd = $Request.Body.AliasesAdd | ForEach-Object { $_.Trim() }
+$aliasesToRemove = $Request.Body.AliasesRm | ForEach-Object { $_.Trim() }
 
-# Log input parameters
-Write-Host "InputUpn: $InputUpn"
-Write-Host "InputAliasesToAdd: $($InputAliasesToAdd -join ", ")"
-Write-Host "InputAliasesToRemove: $($InputAliasesToRemove -join ", ")"
-
-# Organization connection settings
-$domain = $InputDomain  # "VBSDeKlimmuur.onmicrosoft.com"
-$upn = "$InputUpn@$domain"
-$aliasesToAdd = $InputAliasesToAdd | ForEach-Object {"$_@$domain"}
-$aliasesToRemove = $InputAliasesToRemove | ForEach-Object {"$_@$domain"}
-
-# Log connection settings
-Write-Host "Domain: $domain"
+# Log parameters
 Write-Host "Upn: $upn" 
 Write-Host "AliasesToAdd: $($aliasesToAdd -join ", ")"
 Write-Host "AliasesToRemove: $($aliasesToRemove -join ", ")"
@@ -33,18 +20,19 @@ Set-Mailbox $upn -EmailAddresses @{Add=$aliasesToAdd;Remove=$aliasesToRemove}
 $mbox = get-mailbox -Identity $upn
 if ($null -ne $mbox) {
     $aliases = $mbox.emailaddresses | Where-Object { $_ -clike "smtp:*"} | ForEach-Object { $_.substring(5) } 
-    $body = "'$upn' aliases: $($aliases -join ", ")"
+    $message = "'$upn' aliases: $($aliases -join ", ")"
+    $status = "Success"
 } else {
-    $body = "Error '$upn': mailbox does not exist. $($error[0].exception.message)"
+    $message = "Error '$upn': mailbox does not exist. $($error[0].exception.message)"
+    $status = "Error"
 }    
-
 
 # Associate values to output bindings by calling 'Push-OutputBinding'.
 Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{ 
     StatusCode = 200 
     Body       = @{  
-        message = "Succesvol verwerkt voor $upn"  
-        summary = "Toegevoegd: $($addAliases.Count), Verwijderd: $($removeAliases.Count)" 
+        message = $message  
+        status = $status
     } 
 })
 #From gitBash
