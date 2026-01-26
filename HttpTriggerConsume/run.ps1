@@ -5,7 +5,7 @@ param($Request, $TriggerMetadata) #idk youtube vid met uitleg over param blokken
 
 # Input parameters
 #$InputDomain = Request.Query.domain #Line 17 is hardcoded for now
-$InputUpn = Request.Query.upn
+$InputUpn = $Request.Query.upn
 if ($Request.Query.AliasesAdd){
     $InputAliasesToAdd = Request.Query.AliasesAdd -split "," | ForEach-Object { $_.Trim() }
 }
