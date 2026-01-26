@@ -14,6 +14,7 @@
 if ($env:MSI_SECRET) {
     Disable-AzContextAutosave -Scope Process | Out-Null
     Connect-AzAccount -Identity
+    Connect-ExchangeOnline -ManagedIdentity -Organization "VBSDeKlimmuur.onmicrosoft.com"
 }
 
 # Uncomment the next line to enable legacy AzureRm alias in Azure PowerShell.
