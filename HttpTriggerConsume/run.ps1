@@ -35,23 +35,29 @@ Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
         status = $status
     } 
 })
-#From gitBash
+
+# Clean version
+
+ <#
 
 #Call als volgt:
-# Dooor ai => curl -X POST "http://localhost:7071/api/HttpTriggerConsume" -H "Content-Type: application/json" -d "{\"upn\":\"testuser\",\"AliasesAdd\":[\"alias1\",\"alias2\"],\"AliasesRm\":[\"oldalias1\"]}"
 
 #$uri = "https://jouw-app.azurewebsites.net" 
+
+$uri = "https://orkaconsumptionplanfuncapp-g6eebwc7gdg8hnds.westeurope-01.azurewebsites.net/api/HttpTriggerConsume"
+
+# Definieer de parameters in een hashtable
+$body = @{
+    upn           = "user@example.com"
+    AliasesAdd    = @("alias1@example.com", "alias2@example.com")
+    AliasesRm     = @("oldalias@example.com")
+}
+
+# Zet de hashtable om naar JSON en maak de call
+$jsonBody = $body | ConvertTo-Json
+$response = Invoke-RestMethod -Uri $uri -Method Post -Body $jsonBody -ContentType "application/json"
  
-# Definieer de parameters in een hashtable 
-#$body = @{ 
-#    upn           = "user@example.com" 
-#    addAliases    = @("alias1@example.com", "alias2@example.com") 
-#    removeAliases = @("oldalias@example.com") 
-#} 
- 
-## Zet de hashtable om naar JSON en maak de call 
-#$jsonBody = $body | ConvertTo-Json 
-#$response = Invoke-RestMethod -Uri $uri -Method Post -Body $jsonBody -ContentType "application/json" 
- 
-## Toon het resultaat 
-#$response.message
+# Toon het resultaat
+$response.message
+
+#>
