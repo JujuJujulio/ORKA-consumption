@@ -10,7 +10,7 @@ if ($Request.Query.AliasesAdd){
     $InputAliasesToAdd = $Request.Query.AliasesAdd -split "," | ForEach-Object { $_.Trim() }
 }
 if ($Request.Query.AliasesRm){
-    $InputAliasesToRemove = $Request.Query.AliasesToRm -split "," | ForEach-Object { $_.Trim() }
+    $InputAliasesToRemove = $Request.Query.AliasesRm -split "," | ForEach-Object { $_.Trim() }
 }
 Write-Host "InputUpn: $InputUpn"
 Write-Host "InputAliasesToAdd: $($InputAliasesToAdd -join ", ")"
