@@ -19,8 +19,8 @@ Write-Host "InputAliasesToRemove: $($InputAliasesToRemove -join ", ")"
 # Organization connection settings
 $domain = "VBSDeKlimmuur.onmicrosoft.com"  # $InputDomain
 $upn = "$InputUpn@$domain"
-$aliasesToAdd = $InputAliasesToAdd | ForEach-Object {"$_$domain"}
-$aliasesToRemove = $InputAliasesToRemove | ForEach-Object {"$_$domain"}
+$aliasesToAdd = $InputAliasesToAdd | ForEach-Object {"$_@$domain"}
+$aliasesToRemove = $InputAliasesToRemove | ForEach-Object {"$_@$domain"}
 
 # 1. Add and remove aliases as requested
 Set-Mailbox $upn -EmailAddresses @{Add=$aliasesToAdd;Remove=$aliasesToRemove}    
