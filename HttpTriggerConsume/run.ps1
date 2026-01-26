@@ -7,10 +7,10 @@ param($Request, $TriggerMetadata) #idk youtube vid met uitleg over param blokken
 #$InputDomain = Request.Query.domain #Line 17 is hardcoded for now
 $InputUpn = $Request.Query.upn
 if ($Request.Query.AliasesAdd){
-    $InputAliasesToAdd = Request.Query.AliasesAdd -split "," | ForEach-Object { $_.Trim() }
+    $InputAliasesToAdd = $Request.Query.AliasesAdd -split "," | ForEach-Object { $_.Trim() }
 }
 if ($Request.Query.AliasesRm){
-    $InputAliasesToRemove = Request.Query.AliasesToRm -split "," | ForEach-Object { $_.Trim() }
+    $InputAliasesToRemove = $Request.Query.AliasesToRm -split "," | ForEach-Object { $_.Trim() }
 }
 Write-Host "InputUpn: $InputUpn"
 Write-Host "InputAliasesToAdd: $($InputAliasesToAdd -join ", ")"
