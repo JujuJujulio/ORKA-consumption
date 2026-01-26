@@ -10,7 +10,7 @@ Write-Host "PowerShell HTTP trigger function processed a request."
 #   Exchange:   do the exchange code, cahinging aliases of mailbox
 #   SayHello:   only give a response, returning the parameters
 #   Version:    only return version and configuration info
-$codePath = "Version"
+$codePath = "Exchange"
 switch ($codePath) {
     "Version" {
         $ps_version = $PSVersionTable.PSVersion -join "."
