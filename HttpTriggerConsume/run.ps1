@@ -12,6 +12,9 @@ if ($Request.Query.AliasesAdd){
 if ($Request.Query.AliasesRm){
     $InputAliasesToRemove = Request.Query.AliasesToRm -split "," | ForEach-Object { $_.Trim() }
 }
+Write-Host "InputUpn: $InputUpn"
+Write-Host "InputAliasesToAdd: $InputAliasesToAdd"
+Write-Host "InputAliasesToRemove: $InputAliasesToRemove"
 
 # Organization connection settings
 $domain = "VBSDeKlimmuur.onmicrosoft.com"  # $InputDomain
