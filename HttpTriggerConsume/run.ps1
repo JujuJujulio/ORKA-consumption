@@ -41,23 +41,54 @@ Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{
  <#
 
 #Call als volgt:
+{
+    #$uri = "https://jouw-app.azurewebsites.net" 
 
-#$uri = "https://jouw-app.azurewebsites.net" 
+    $uri = "https://orkaconsumptionplanfuncapp-g6eebwc7gdg8hnds.westeurope-01.azurewebsites.net/api/HttpTriggerConsume"
 
-$uri = "https://orkaconsumptionplanfuncapp-g6eebwc7gdg8hnds.westeurope-01.azurewebsites.net/api/HttpTriggerConsume"
+    # Definieer de parameters in een hashtable
+    $body = @{
+        upn           = "user@example.com"
+        AliasesAdd    = @("alias1@example.com", "alias2@example.com")
+        AliasesRm     = @("oldalias@example.com")
+    }
 
-# Definieer de parameters in een hashtable
-$body = @{
-    upn           = "user@example.com"
-    AliasesAdd    = @("alias1@example.com", "alias2@example.com")
-    AliasesRm     = @("oldalias@example.com")
+    # Zet de hashtable om naar JSON en maak de call
+    $jsonBody = $body | ConvertTo-Json
+    # Toon het resultaat
+    Invoke-RestMethod -Uri $uri -Method Post -Body $jsonBody -ContentType "application/json"
 }
 
-# Zet de hashtable om naar JSON en maak de call
-$jsonBody = $body | ConvertTo-Json
-$response = Invoke-RestMethod -Uri $uri -Method Post -Body $jsonBody -ContentType "application/json"
- 
-# Toon het resultaat
-$response.message
+# Mijn versie met authenticatie
+{
+    $tenantId = "<x>"
+    $clientId = "<y>"
+    $thumbprint = "<z>"
+    $functionUri = "<aa>"
+
+    Connect-AzAccount -ServicePrincipal `
+                    -ApplicationId $clientID `
+                    -TenantId $tenantId `
+                    -CertificateThumbprint $thumbprint
+
+    $tokenResponse = Get-AzAccessToken -ResourceUrl $clientId
+    $plainToken = [System.Net.NetworkCredential]::new("",$tokenResponse.Token).Password
+
+    # 2. De beveiligde API call maken
+    $headers = @{
+        Authorization = "Bearer $plainToken"
+        "Content-Type" = "application/json"
+    }
+
+    $body = @{
+        upn           = "user@example.com"
+        addAliases    = @("alias1@example.com", "alias2@example.com")
+        removeAliases = @("oldalias@example.com")
+    } | ConvertTo-Json
+
+    # Toon het resultaat
+    $response = Invoke-RestMethod -Uri $functionUri -Method Post -Headers $headers -Body $body
+    $response.message
+}
 
 #>
