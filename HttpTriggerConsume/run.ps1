@@ -5,8 +5,8 @@ param($Request, $TriggerMetadata) #idk youtube vid met uitleg over param blokken
 
 # Input parameters
 $upn = $Request.Body.upn
-$aliasesToAdd = $Request.Body.AliasesAdd | ForEach-Object { $_.Trim() }
-$aliasesToRemove = $Request.Body.AliasesRm | ForEach-Object { $_.Trim() }
+$aliasesToAdd = $Request.Body.addAliases | ForEach-Object { $_.Trim() }
+$aliasesToRemove = $Request.Body.removeAliases | ForEach-Object { $_.Trim() }
 
 # Log parameters
 Write-Host "Upn: $upn" 
