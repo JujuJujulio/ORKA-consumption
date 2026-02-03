@@ -27,7 +27,7 @@ if ($null -ne $mbox) {
     $status = "Error"
 }    
 
-# Associate values to output bindings by calling 'Push-OutputBinding'.
+# Associate values to output bindings by calling 'Push-OutputBinding'. nef
 Push-OutputBinding -Name Response -Value ([HttpResponseContext]@{ 
     StatusCode = 200 
     Body       = @{  
